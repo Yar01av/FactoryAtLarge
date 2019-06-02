@@ -7,22 +7,26 @@ class Offer(ABC):
     """
 
     @abstractmethod
-    def __init__(self, name: str, price: float, effort: float):
-        self._price = price
-        self._name = name
-        self._production_effort = effort
+    def __init__(self, name: str, price: float, effort: float, resources: dict):
+        self._RESOURCES = resources
+        self._PRICE = price
+        self._NAME = name
+        self._PRODUCTION_EFFORT = effort
 
     def get_price(self) -> float:
         """
         :return: Price of the offer
         """
-        return self._price
+        return self._PRICE
 
     def get_name(self) -> str:
-        return self._name
+        return self._NAME
+
+    def get_resources(self) -> dict:
+        return self._RESOURCES
 
     def get_production_effort(self) -> float:
-        return self._production_effort
+        return self._PRODUCTION_EFFORT
 
 
 class Seal(Offer):
