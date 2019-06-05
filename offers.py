@@ -35,5 +35,5 @@ class Seal(Offer):
     """
 
     def __init__(self, name: str, price: float, effort: float):
-        super().__init__(f"SEAL-{name}", price, effort)
+        super().__init__(f"SEAL-{name}", price, effort, dict(titanium=10, iron=20))
 

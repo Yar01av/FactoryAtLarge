@@ -11,11 +11,12 @@ class Factory(ABC):
     """
 
     class _Assembly(ABC):
+        @abstractmethod
         def __init__(self):
             pass
 
         @abstractmethod
-        def assemble_order(self, offer: Offer, n_workers: int) -> dict:
+        def assemble_order(self: Type["Factory._Assembly"], offer: Offer, n_workers: int) -> dict:
             """
             Actually assemble the order. It is assumed that all resources have been allocated.
 
@@ -80,8 +81,7 @@ class EttenLeurFactory(Factory):
     
     class _QuickAssembly(Factory._Assembly):
         def assemble_order(self, offer: Offer, n_workers: int) -> dict:
-            # TODO: continue
-            pass
+            return {'assy_time': offer.get_production_effort() / n_workers, 'final_cost': offer.get_price()}
 
     def __init__(self, personnel: int):
         super().__init__(personnel)

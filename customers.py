@@ -17,7 +17,7 @@ class Customer(ABC):
         self.order_chooser = order_chooser
 
     @abstractmethod
-    def buy_item(self, options):
+    def buy_item(self):
         """
         Forces the customer to place an order at a factory of their choosing
 
@@ -35,13 +35,13 @@ class SimpleCustomer(Customer):
     def __init__(self, name: str, factories: List[Factory]):
         super().__init__(name, factories)
 
-    def buy_item(self, options: List[Offer]):
+    def buy_item(self):
         """
         Choose the desired item at the deired factory
         :param options: options to choose from
         :return:
         """
         fac_choice = self.factory_chooser(self.factories)
-        prod_choice = self.order_chooser(fac_choice.get_offers(options))
+        prod_choice = self.order_chooser(fac_choice.get_offers())
 
         return fac_choice.place_order(prod_choice)
