@@ -11,7 +11,6 @@ class Factory(ABC):
     """
 
     class _Assembly(ABC):
-        @abstractmethod
         def __init__(self):
             pass
 
@@ -27,10 +26,10 @@ class Factory(ABC):
             pass
 
     @abstractmethod
-    def __init__(self, personnel: int):
+    def __init__(self, personnel: int, storage: dict):
         self.personnel = personnel
-        self.assembly = Factory.create_assembly()
-        self.storage = dict()
+        self.assembly = self.create_assembly()
+        self.storage = storage
 
     @abstractmethod
     def get_offers(self) -> List[Offer]:
@@ -39,7 +38,7 @@ class Factory(ABC):
         """
 
     @abstractmethod
-    def place_order(self, offer: Offer):
+    def place_order(self, offer: Offer) -> dict:
         """
         :param offer: what the customer wants to buy
         :return: throw exception on failure and return a dictionary with useful info otherwise
@@ -48,6 +47,10 @@ class Factory(ABC):
         # Check that this a valid offer (and it comes from the list provided by the factory)
         if offer not in self.get_offers():
             raise Exception()
+
+        Factory.__extract_resources(self.storage, offer.get_resources())
+
+        return dict()  # Not strictly necessary
 
     @classmethod
     def __extract_resources(cls, resources: dict, to_extract: dict) -> None:
@@ -64,9 +67,8 @@ class Factory(ABC):
             else:
                 resources[key] -= to_extract[key]
 
-    @classmethod
     @abstractmethod
-    def create_assembly(cls) -> Type[_Assembly]:
+    def create_assembly(self) -> Type[_Assembly]:
         """
 
         :return: instance of implementation of _Assembly
@@ -84,19 +86,16 @@ class EttenLeurFactory(Factory):
             return {'assy_time': offer.get_production_effort() / n_workers, 'final_cost': offer.get_price()}
 
     def __init__(self, personnel: int):
-        super().__init__(personnel)
+        super().__init__(personnel, dict(titanium=10, iron=20))
 
         self._offers = [Seal("A", 15000.0, 12), Seal("B", 15000.0, 12)]
 
-    @classmethod
-    def create_assembly(cls):
-        return cls._QuickAssembly()
+    def create_assembly(self):
+        return self._QuickAssembly()
 
     def place_order(self, offer: Offer):
         super().place_order(offer)
-
-        EttenLeurFactory.__extract_resources(self.storage, offer.get_resources())
-        self.assembly.assemble_order(self.assembly, offer, self.personnel)
+        return self.assembly.assemble_order(offer, self.personnel)
 
     def get_offers(self) -> List[Offer]:
         return self._offers

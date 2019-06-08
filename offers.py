@@ -34,6 +34,7 @@ class Seal(Offer):
     Encapsulates a mechanical seal
     """
 
-    def __init__(self, name: str, price: float, effort: float):
-        super().__init__(f"SEAL-{name}", price, effort, dict(titanium=10, iron=20))
+    def __init__(self, name: str, price: float, effort: float, materials=None):
+        if materials is None:
+            super().__init__(f"SEAL-{name}", price, effort, dict(titanium=10, iron=20))
 
